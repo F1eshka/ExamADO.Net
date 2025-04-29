@@ -1,0 +1,47 @@
+﻿<Window x:Class="EkzamenADO.AddAdWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Додати оголошення" Height="400" Width="400"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="Назва:" />
+            <TextBox x:Name="TitleBox" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0,0,0,10">
+            <TextBlock Text="Опис:" />
+            <TextBox x:Name="DescriptionBox" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Margin="0,0,0,10">
+            <TextBlock Text="Ціна:" />
+            <TextBox x:Name="PriceBox" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Margin="0,0,0,10">
+            <TextBlock Text="Категорія:" />
+            <ComboBox x:Name="CategoryBox" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Margin="0,0,0,10">
+            <Button x:Name="SelectImageButton" Content="Вибрати зображення"
+                    Height="40" Click="SelectImageButton_Click"/>
+            <Label x:Name="ImageLabel" Content="Файл не обрано" HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <Button Grid.Row="5" Content="Додати" Click="AddButton_Click"
+                Width="100" Height="35" HorizontalAlignment="Center" Margin="0,10"/>
+    </Grid>
+</Window>

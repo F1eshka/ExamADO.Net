@@ -1,0 +1,181 @@
+﻿<Window x:Class="EkzamenADO.Windows.AdsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:EkzamenADO.Converters"
+        Title="Оголошення" Height="600" Width="950"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <local:ImagePathConverter x:Key="ImagePathConverter"/>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <Style TargetType="TabControl">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Grid>
+                            <Border x:Name="Border"
+                                    Background="LightGray"
+                                    BorderBrush="Gray"
+                                    BorderThickness="1"
+                                    CornerRadius="10,10,0,0"
+                                    Padding="10,5">
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"
+                                                  ContentSource="Header"/>
+                            </Border>
+                            <Border x:Name="Underline"
+                                    Height="3"
+                                    Background="#FF3399FF"
+                                    VerticalAlignment="Bottom"
+                                    Visibility="Collapsed"
+                                    CornerRadius="2"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#FFCCE5FF"/>
+                                <Setter TargetName="Underline" Property="Visibility" Value="Visible"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#FFE6F2FF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Левая часть -->
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                <Button Content="Додати оголошення" Width="200" Height="30" Click="AddAd_Click" Margin="0,0,10,0"/>
+                <Button Content="Мій профіль" Width="120" Height="30" Click="Profile_Click"/>
+            </StackPanel>
+
+            <!-- Правая часть (поиск) -->
+            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                <TextBlock Text="Пошук за назвою:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBox x:Name="SearchBox" Width="250" Height="25" TextChanged="SearchBox_TextChanged"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Основные вкладки -->
+        <TabControl x:Name="MainTabControl" Grid.Row="1" SelectionChanged="MainTabControl_SelectionChanged">
+            <!-- Мої оголошення -->
+            <TabItem Header="Мої оголошення">
+                <Grid>
+                    <ListView x:Name="MyAdsList" Margin="5">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Назва" Width="150" DisplayMemberBinding="{Binding Title}" />
+                                <GridViewColumn Header="Опис" Width="250" DisplayMemberBinding="{Binding Description}" />
+                                <GridViewColumn Header="Ціна" Width="80" DisplayMemberBinding="{Binding Price}" />
+                                <GridViewColumn Header="Категорія" Width="120" DisplayMemberBinding="{Binding CategoryName}" />
+                                <GridViewColumn Header="Зображення" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Width="60" Height="60" Stretch="Uniform"
+                                                   Source="{Binding ImageFileName, Converter={StaticResource ImagePathConverter}}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <TextBlock Text="Ще немає оголошень. Додайте перше!"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="Gray">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Items.Count, ElementName=MyAdsList}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+            </TabItem>
+
+            <!-- Усі оголошення -->
+            <TabItem Header="Усі оголошення">
+                <Grid>
+                    <ListView x:Name="AllAdsList" Margin="5">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Назва" Width="150" DisplayMemberBinding="{Binding Title}" />
+                                <GridViewColumn Header="Опис" Width="250" DisplayMemberBinding="{Binding Description}" />
+                                <GridViewColumn Header="Ціна" Width="80" DisplayMemberBinding="{Binding Price}" />
+                                <GridViewColumn Header="Категорія" Width="120" DisplayMemberBinding="{Binding CategoryName}" />
+                                <GridViewColumn Header="Зображення" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Width="60" Height="60" Stretch="Uniform"
+                                                   Source="{Binding ImageFileName, Converter={StaticResource ImagePathConverter}}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <TextBlock Text="Ще немає оголошень. Додайте перше!"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="Gray">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Items.Count, ElementName=AllAdsList}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Нижние кнопки -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <Button Content="Редагувати" Width="100" Margin="10" Click="EditAd_Click"/>
+            <Button Content="Видалити" Width="100" Margin="10" Click="DeleteAd_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
